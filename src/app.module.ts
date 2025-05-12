@@ -10,7 +10,7 @@ import { EncryptionHelper } from './app/utils/encryption.helper';
 import { JwtModule } from '@nestjs/jwt';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SchedulerModule } from './scheduler/scheduler.module';
-
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +35,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
     }),
     AuthModule,
     SchedulerModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, BunyanLogger, EncryptionHelper],

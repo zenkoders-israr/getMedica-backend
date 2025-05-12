@@ -50,6 +50,13 @@ export class SlotsModel extends PostgresBaseModel {
   })
   patient_id: number;
 
+  @Column({
+    name: 'booking_reason',
+    type: 'text',
+    nullable: true,
+  })
+  booking_reason: string;
+
   @ManyToOne(() => UserModel, (userModel) => userModel.doctorSchedule)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserModel;

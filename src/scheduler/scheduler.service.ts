@@ -1,7 +1,7 @@
 import { BunyanLogger } from './../app/commons/logger.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchedulerRepository } from '@/app/repositories/scheduler/scheduler.repository';
-import { CreateSchedulerDto } from './scheduler.dto';
+import { CreateSchedulerDto, BookSlotDto } from './scheduler.dto';
 import { JwtPayload } from '@/app/contracts/types/jwtPayload.type';
 import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
 import * as moment from 'moment';
@@ -10,11 +10,14 @@ import { SlotsRepository } from '@/app/repositories/scheduler/slots.repository';
 import { DataSource, EntityManager, In } from 'typeorm';
 import { SchedulerMessages } from './scheduler.message';
 import { SchedulerModel } from '@/app/models/scheduler/scheduler.model';
+import { UserRepository } from '@/app/repositories/user/user.repository';
+import { UserType } from '@/app/contracts/enums/usertype.enum';
 @Injectable()
 export class SchedulerService {
   constructor(
     private readonly schedulerRepository: SchedulerRepository,
     private readonly slotsRepository: SlotsRepository,
+    private readonly userRepository: UserRepository,
     private readonly logger: BunyanLogger,
     private readonly dataSource: DataSource,
   ) {}
@@ -104,6 +107,55 @@ export class SchedulerService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async getScheduler(user: JwtPayload, doctor_id?: number) {
+    if (user.user_type == UserType.PATIENT && !doctor_id) {
+      throw new BadRequestException(SchedulerMessages.DOCTOR_ID_REQUIRED);
+    }
+
+    const userId =
+      user.user_type == UserType.DOCTOR ? Number(user.id) : Number(doctor_id);
+
+    const doctor = await this.userRepository.findOne({
+      where: {
+        id: userId,
+        user_type: UserType.DOCTOR,
+        is_deleted: false,
+      },
+    });
+
+    if (!doctor) {
+      throw new BadRequestException(SchedulerMessages.DOCTOR_NOT_FOUND);
+    }
+
+    const scheduler = await this.schedulerRepository.getScheduler(userId);
+
+    return scheduler;
+  }
+
+  async bookSlot(payload: BookSlotDto) {
+    const { slot_id, patient_id, booking_reason } = payload;
+
+    const slot = await this.slotsRepository.findOne({
+      where: { id: Number(slot_id) },
+    });
+
+    if (!slot) {
+      throw new BadRequestException(SchedulerMessages.SLOT_NOT_FOUND);
+    }
+
+    if (slot.booked) {
+      throw new BadRequestException(SchedulerMessages.SLOT_ALREADY_BOOKED);
+    }
+
+    slot.booked = true;
+    slot.patient_id = Number(patient_id);
+    slot.booking_reason = booking_reason;
+
+    await this.slotsRepository.save(slot);
+
+    return slot;
   }
 
   async deleteSlots(

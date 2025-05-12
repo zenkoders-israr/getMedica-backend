@@ -1,21 +1,18 @@
 import { Module } from '@nestjs/common';
-import { SchedulerController } from './scheduler.controller';
-import { SchedulerService } from './scheduler.service';
+import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GeneralHelper } from '../app/utils/general.helper';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserTokenRepository } from '@/app/repositories/user/userToken.repository';
-import { EncryptionHelper } from '@/app/utils/encryption.helper';
-import { SchedulerModel } from '@/app/models/scheduler/scheduler.model';
-import { SchedulerRepository } from '@/app/repositories/scheduler/scheduler.repository';
-import { SlotsRepository } from '@/app/repositories/scheduler/slots.repository';
-import { SlotsModel } from '@/app/models/scheduler/slots.model';
 import { BunyanLogger } from '@/app/commons/logger.service';
 import { UserRepository } from '@/app/repositories/user/user.repository';
+import { UserModel } from '@/app/models/user/user.model';
+import { UserService } from './user.service';
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SchedulerModel, SlotsModel]),
+    TypeOrmModule.forFeature([UserModel]),
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -28,17 +25,14 @@ import { UserRepository } from '@/app/repositories/user/user.repository';
     }),
   ],
 
-  controllers: [SchedulerController],
+  controllers: [UserController],
   providers: [
-    SchedulerService,
-    SchedulerRepository,
-    SlotsRepository,
     GeneralHelper,
     UserTokenRepository,
     UserRepository,
-    EncryptionHelper,
     BunyanLogger,
+    UserService,
   ],
-  exports: [SchedulerService],
+  exports: [UserService],
 })
-export class SchedulerModule {}
+export class UserModule {}

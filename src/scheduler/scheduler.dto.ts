@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
-  IsEmail,
   IsString,
   IsEnum,
   IsArray,
@@ -11,19 +10,21 @@ import {
 import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
 import { isValidTime } from '@/app/decorators/time.decorator';
 
-export class LoginUserDto {
-  @ApiProperty()
+export class BookSlotDto {
+  @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsEmail()
   @IsString()
-  @Transform(({ value }) =>
-    typeof value === 'string' ? value.toLowerCase() : value,
-  )
-  email: string;
+  slot_id: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   @IsNotEmpty()
-  password: string;
+  @IsString()
+  patient_id: string;
+
+  @ApiProperty({ required: false })
+  @IsNotEmpty()
+  @IsString()
+  booking_reason: string;
 }
 
 export class SlotDto {
