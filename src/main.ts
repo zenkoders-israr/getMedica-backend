@@ -16,7 +16,7 @@ async function bootstrap() {
 
   const corsOptions = {
     origin: [
-      'http://localhost:3001', // Todo: Replace with frontend url
+      'http://localhost:5173', // Todo: Replace with frontend url
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
@@ -24,12 +24,11 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  // app.useGlobalPipes(new ValidationPipe());
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true, // Enable class-transformer transformations
-      whitelist: true, // Strip properties not in DTO
-      forbidNonWhitelisted: true, // Throw error for extra properties
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());

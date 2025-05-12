@@ -20,7 +20,7 @@ export class UserModel extends PostgresBaseModel {
     name: 'specialty',
     type: 'enum',
     enum: Specialty,
-    nullable: false,
+    nullable: true,
   })
   specialty: Specialty;
 

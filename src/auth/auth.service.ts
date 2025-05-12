@@ -8,6 +8,7 @@ import { LoginResponse } from '@/app/response/auth/auth.response';
 import { JwtPayload } from '../app/contracts/types/jwtPayload.type';
 import { AuthMessages } from './auth.message';
 import { hashPassword } from '@/app/utils/bcrypt.helper';
+import { UserType } from '@/app/contracts/enums/usertype.enum';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: RegisterUserDto): Promise<UserModel> {
+  async register(payload: RegisterUserDto, userType: UserType): Promise<UserModel> {
+
+    if(userType === UserType.DOCTOR && !payload.specialty) {
+      throw new BadRequestException(AuthMessages.SPECIALTY_REQUIRED);
+    }
+
     const user: UserModel = await this.userRepository.findOne({
       where: { email: payload.email },
     });
@@ -24,8 +30,9 @@ export class AuthService {
     if (user) throw new BadRequestException(AuthMessages.USER_ALREADY_EXISTS);
 
     payload.password = await hashPassword(payload.password);
-    const newUser: UserModel = await this.userRepository.create(payload);
-    return newUser;
+    const newUser: UserModel = await this.userRepository.create({...payload, user_type: userType});
+
+    return await this.userRepository.save(newUser);
   }
 
   async getAuthUser(user: JwtPayload): Promise<UserModel> {

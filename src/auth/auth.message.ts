@@ -4,4 +4,5 @@ export enum AuthMessages {
   USER_ALREADY_EXISTS = 'User with this email already exists, please select another email',
   INVALID_EMAIL = 'User with this email does not exist',
   INVALID_PASSWORD = 'Invalid password',
+  SPECIALTY_REQUIRED = 'Specialty is required for doctor registration',
 }
