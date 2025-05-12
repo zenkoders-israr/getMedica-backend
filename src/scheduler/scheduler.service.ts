@@ -1,15 +1,132 @@
-import { Injectable } from '@nestjs/common';
+import { BunyanLogger } from './../app/commons/logger.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchedulerRepository } from '@/app/repositories/scheduler/scheduler.repository';
+import { CreateSchedulerDto } from './scheduler.dto';
+import { JwtPayload } from '@/app/contracts/types/jwtPayload.type';
+import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
+import * as moment from 'moment';
+import { SlotsModel } from '@/app/models/scheduler/slots.model';
+import { SlotsRepository } from '@/app/repositories/scheduler/slots.repository';
+import { DataSource, EntityManager, In } from 'typeorm';
+import { SchedulerMessages } from './scheduler.message';
 import { SchedulerModel } from '@/app/models/scheduler/scheduler.model';
-
 @Injectable()
 export class SchedulerService {
   constructor(
     private readonly schedulerRepository: SchedulerRepository,
+    private readonly slotsRepository: SlotsRepository,
+    private readonly logger: BunyanLogger,
+    private readonly dataSource: DataSource,
   ) {}
 
+  async upsertScheduler(
+    payload: CreateSchedulerDto[],
+    user: JwtPayload,
+  ): Promise<boolean> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-  async createScheduler(payload: SchedulerModel): Promise<SchedulerModel> {
-    return this.schedulerRepository.create(payload);
+    try {
+      const userId = Number(user.id);
+
+      const existingSchedulers = await this.schedulerRepository.find({
+        user_id: userId,
+      });
+
+      if (existingSchedulers.length > 0) {
+        const schedulerIds = existingSchedulers.map((s) => s.id);
+
+        const bookedSlots = await this.slotsRepository.find({
+          schedule_id: In(schedulerIds),
+          booked: true,
+        });
+
+        if (bookedSlots.length > 0) {
+          this.logger.warn(
+            `Cannot update schedule. ${bookedSlots.length} slots are already booked for user ID ${userId}.`,
+          );
+          throw new BadRequestException(SchedulerMessages.SLOTS_ALREADY_BOOKED);
+        }
+        await Promise.allSettled(
+          existingSchedulers.map((scheduler) =>
+            this.deleteSlots(userId, scheduler.id, queryRunner.manager),
+          ),
+        );
+
+        await this.deleteScheduler(userId, queryRunner.manager);
+
+        this.logger.log(
+          `Deleted ${existingSchedulers.length} existing schedules and their slots for user ID ${userId}.`,
+        );
+      }
+
+      const schedulerPromises = payload.map(async ({ scheduleDay, slots }) => {
+        try {
+          const scheduler = queryRunner.manager.create(SchedulerModel, {
+            user_id: userId,
+            schedule_day: scheduleDay,
+            date: this.getNextScheduleDate(scheduleDay),
+          });
+
+          const savedScheduler = await queryRunner.manager.save(scheduler);
+
+          const slotEntities = slots.map((slot) =>
+            queryRunner.manager.create(SlotsModel, {
+              user_id: userId,
+              schedule_id: savedScheduler.id,
+              start_time: slot.from,
+              end_time: slot.to,
+            }),
+          );
+
+          await queryRunner.manager.save(SlotsModel, slotEntities);
+
+          return true;
+        } catch (error) {
+          this.logger.error(
+            `Failed to create scheduler for day "${scheduleDay}" for user ID ${userId}. Error: ${error}`,
+          );
+          return false;
+        }
+      });
+
+      const results = await Promise.allSettled(schedulerPromises);
+
+      await queryRunner.commitTransaction();
+
+      return results.every(
+        (result) => result.status === 'fulfilled' && result.value === true,
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async deleteSlots(
+    userId: number,
+    schedulerId: number,
+    manager: EntityManager,
+  ) {
+    return manager.delete(SlotsModel, {
+      user_id: userId,
+      schedule_id: schedulerId,
+    });
+  }
+
+  async deleteScheduler(userId: number, manager: EntityManager) {
+    return manager.delete(SchedulerModel, { user_id: userId });
+  }
+
+  getNextScheduleDate(day: ScheduleDay): string {
+    const today = moment().startOf('day');
+    const todayDay = today.isoWeekday();
+
+    const daysToAdd = (day + 7 - todayDay) % 7 || 7;
+
+    return moment().startOf('day').add(daysToAdd, 'days').format('YYYY-MM-DD');
   }
 }

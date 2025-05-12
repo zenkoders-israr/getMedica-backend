@@ -78,7 +78,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/eslintrc": "eslint/eslintrc",
     "@eslint/js": "^9.8.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
@@ -90,12 +90,12 @@
     "@types/nodemailer": "^6.4.17",
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
+    "@typescript-eslint/parser": "^8.32.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "globals": "^15.8.0",
-    "husky": "^9.1.4",
+    "husky": "^9.1.7",
     "jest": "^29.5.0",
     "lint-staged": "^15.2.7",
     "prettier": "^3.0.0",

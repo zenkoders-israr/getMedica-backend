@@ -9,10 +9,13 @@ import { UserTokenRepository } from '@/app/repositories/user/userToken.repositor
 import { EncryptionHelper } from '@/app/utils/encryption.helper';
 import { SchedulerModel } from '@/app/models/scheduler/scheduler.model';
 import { SchedulerRepository } from '@/app/repositories/scheduler/scheduler.repository';
+import { SlotsRepository } from '@/app/repositories/scheduler/slots.repository';
+import { SlotsModel } from '@/app/models/scheduler/slots.model';
+import { BunyanLogger } from '@/app/commons/logger.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SchedulerModel]),
+    TypeOrmModule.forFeature([SchedulerModel, SlotsModel]),
     ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -29,9 +32,11 @@ import { SchedulerRepository } from '@/app/repositories/scheduler/scheduler.repo
   providers: [
     SchedulerService,
     SchedulerRepository,
+    SlotsRepository,
     GeneralHelper,
     UserTokenRepository,
     EncryptionHelper,
+    BunyanLogger,
   ],
   exports: [SchedulerService],
 })

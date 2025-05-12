@@ -1,4 +1,1 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-. "$(dirname "$0")/common.sh"  # Include the workaround
-yarn lint-staged
+npm test

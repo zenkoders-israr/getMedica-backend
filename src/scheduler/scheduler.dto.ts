@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsNotEmpty, Length, IsEmail, IsString, IsEnum } from 'class-validator';
-import { Specialty } from '@/app/contracts/enums/specialty.enum';
+import { Transform, Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsString,
+  IsEnum,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
+import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
+import { isValidTime } from '@/app/decorators/time.decorator';
 
 export class LoginUserDto {
   @ApiProperty()
@@ -18,26 +26,30 @@ export class LoginUserDto {
   password: string;
 }
 
-export class RegisterUserDto {
+export class SlotDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsEmail()
   @IsString()
-  email: string;
+  @isValidTime({ message: 'Start time must be in HH:mm format (e.g., 19:10, 01:10).' })
+  from: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @Length(8, 128)
-  password: string;
+  @isValidTime({ message: 'End time must be in HH:mm format (e.g., 19:10, 01:10).' })
+  to: string;
+}
+
+export class CreateSchedulerDto {
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  @IsEnum(ScheduleDay)
+  scheduleDay: ScheduleDay;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @ApiProperty({ required: true })
-  @IsNotEmpty()
-  @IsEnum(Specialty)
-  specialty: Specialty;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SlotDto)
+  slots: SlotDto[];
 }

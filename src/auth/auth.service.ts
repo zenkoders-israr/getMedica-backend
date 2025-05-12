@@ -17,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: RegisterUserDto, userType: UserType): Promise<UserModel> {
+  async register(payload: RegisterUserDto, userType: UserType): Promise<boolean> {
 
     if(userType === UserType.DOCTOR && !payload.specialty) {
       throw new BadRequestException(AuthMessages.SPECIALTY_REQUIRED);
@@ -32,7 +32,8 @@ export class AuthService {
     payload.password = await hashPassword(payload.password);
     const newUser: UserModel = await this.userRepository.create({...payload, user_type: userType});
 
-    return await this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    return true;
   }
 
   async getAuthUser(user: JwtPayload): Promise<UserModel> {

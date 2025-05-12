@@ -13,7 +13,7 @@ export const getTypeOrmConfig = async (
     database: config.get('DB_DATABASE'),
     entities: [__dirname + '/../**/*.model{.ts,.js}'],
     migrations: ['dist/app/migrations/*{.ts,.js}'],
-    synchronize: false,
-    logging: false,
+    synchronize: true,
+    logging: true,
   };
 };

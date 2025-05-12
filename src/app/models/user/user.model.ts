@@ -5,7 +5,7 @@ import { UserType } from '../../contracts/enums/usertype.enum';
 import { UserTokenModel } from './userToken.model';
 import { Specialty } from '../../contracts/enums/specialty.enum';
 import { SchedulerModel } from '../scheduler/scheduler.model';
-
+import { SlotsModel } from '../scheduler/slots.model';
 @Entity('users')
 export class UserModel extends PostgresBaseModel {
   @Column({
@@ -58,4 +58,10 @@ export class UserModel extends PostgresBaseModel {
 
   @OneToMany(() => SchedulerModel, (schedulerModel) => schedulerModel.user)
   doctorSchedule: SchedulerModel[];
+
+  @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.user)
+  slots: SlotsModel[];
+
+  @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.patient)
+  patientSlots: SlotsModel[];
 }

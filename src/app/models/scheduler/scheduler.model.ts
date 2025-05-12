@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { PostgresBaseModel } from '../postgresBase.model';
 import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
 import { UserModel } from '../user/user.model';
+import { SlotsModel } from './slots.model';
 
 @Entity('scheduler')
 export class SchedulerModel extends PostgresBaseModel {
@@ -20,7 +21,17 @@ export class SchedulerModel extends PostgresBaseModel {
   })
   schedule_day: ScheduleDay;
 
+  @Column({
+    name: 'date',
+    type: 'varchar',
+    nullable: false,
+  })
+  date: string;
+
   @ManyToOne(() => UserModel, (userModel) => userModel.doctorSchedule)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserModel;
+
+  @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.schedule)
+  slots: SlotsModel[];
 }
