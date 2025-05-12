@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserModel } from '../../models/user/user.model';
 import { PostgresRepository } from '../postgresBase.repository';
-import {  DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 // import { IPaginationDBParams } from '../../contracts/interfaces/paginationDBParams.interface';
 // import { IPaginatedModelResponse } from '../../contracts/interfaces/paginatedModelResponse.interface';
 // import { UserType } from '@/app/contracts/enums/usertype.enum';

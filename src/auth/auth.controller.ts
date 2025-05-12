@@ -23,9 +23,11 @@ export class AuthController extends BaseController {
     return this.OKResponse(res, user);
   }
 
-
   @Post('auth/register-patient')
-  async registerPatient(@Body() payload: RegisterUserDto, @Res() res: Response) {
+  async registerPatient(
+    @Body() payload: RegisterUserDto,
+    @Res() res: Response,
+  ) {
     const user = await this.authService.register(payload, UserType.PATIENT);
     return this.OKResponse(res, user);
   }

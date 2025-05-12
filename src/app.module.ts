@@ -11,7 +11,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SchedulerModule } from './scheduler/scheduler.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +39,4 @@ import { SchedulerModule } from './scheduler/scheduler.module';
   controllers: [AppController],
   providers: [AppService, BunyanLogger, EncryptionHelper],
 })
-
-
 export class AppModule {}

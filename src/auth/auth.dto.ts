@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, Length, IsEmail, IsString, IsEnum, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  Length,
+  IsEmail,
+  IsString,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
 import { Specialty } from '@/app/contracts/enums/specialty.enum';
 
 export class LoginUserDto {
@@ -25,7 +32,6 @@ export class RegisterUserDto {
   @Length(3, 128)
   name: string;
 
-
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsEmail()
@@ -38,7 +44,6 @@ export class RegisterUserDto {
   @IsString()
   @Length(8, 128)
   password: string;
-
 
   @ApiProperty({ required: false })
   @IsOptional()

@@ -4,7 +4,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getTypeOrmConfig } from './app/config/typeorm.config';
 import { BunyanLogger } from './app/commons/logger.service';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -30,13 +30,17 @@ export class SlotDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @isValidTime({ message: 'Start time must be in HH:mm format (e.g., 19:10, 01:10).' })
+  @isValidTime({
+    message: 'Start time must be in HH:mm format (e.g., 19:10, 01:10).',
+  })
   from: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @isValidTime({ message: 'End time must be in HH:mm format (e.g., 19:10, 01:10).' })
+  @isValidTime({
+    message: 'End time must be in HH:mm format (e.g., 19:10, 01:10).',
+  })
   to: string;
 }
 

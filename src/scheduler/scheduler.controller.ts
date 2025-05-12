@@ -16,10 +16,17 @@ export class SchedulerController extends BaseController {
     super();
   }
 
- @UseGuards(AuthGuardFactory([UserType.DOCTOR]))
- @Patch('scheduler/create')
-  async createScheduler(@Body() payload: CreateSchedulerDto[], @User() user: JwtPayload, @Res() res: Response) {
-    const scheduler = await this.schedulerService.upsertScheduler(payload, user);
+  @UseGuards(AuthGuardFactory([UserType.DOCTOR]))
+  @Patch('scheduler/create')
+  async createScheduler(
+    @Body() payload: CreateSchedulerDto[],
+    @User() user: JwtPayload,
+    @Res() res: Response,
+  ) {
+    const scheduler = await this.schedulerService.upsertScheduler(
+      payload,
+      user,
+    );
     return this.OKResponse(res, scheduler);
   }
 }

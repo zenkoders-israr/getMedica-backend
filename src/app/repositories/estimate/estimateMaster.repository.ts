@@ -102,8 +102,8 @@
 //           'estimate_masters.estimateDetail',
 //           'estimateDetail',
 //           `
-//           estimateDetail.is_grand_total = :isGrandTotal 
-//           AND estimateDetail.is_send_to_owner = :isSendToOwner 
+//           estimateDetail.is_grand_total = :isGrandTotal
+//           AND estimateDetail.is_send_to_owner = :isSendToOwner
 //           AND estimateDetail.is_estimate_approved = :isEstimateApproved
 //           ${is_send_to_owner ? 'AND estimateDetail.franchise_admin_id IS NOT NULL' : 'AND estimateDetail.franchise_admin_id IS NULL'}
 //           `,
@@ -438,13 +438,13 @@
 //         primaryConditionQuery.andWhere(
 //           `
 //           (
-//             (estimateDetail.franchise_admin_id IS NOT NULL 
+//             (estimateDetail.franchise_admin_id IS NOT NULL
 //             AND estimateDetail.is_send_to_owner = :isSendToOwner
 //             AND estimateDetail.estimate_master_id = :estimate_master_id)
-//           ) 
-//           OR 
+//           )
+//           OR
 //           (
-//             estimateDetail.id IS NULL 
+//             estimateDetail.id IS NULL
 //             AND estimateDetail.estimate_master_id = :estimate_master_id
 //           )
 //           `,
@@ -465,10 +465,10 @@
 //           fallbackConditionQuery.andWhere(
 //             `
 //           (
-//             (estimateDetail.vendor_id IS NOT NULL 
+//             (estimateDetail.vendor_id IS NOT NULL
 //             ${vendor_id ? 'AND estimateDetail.vendor_id = :vendor_id' : ''}
 //             AND estimateDetail.franchise_admin_id IS NULL
-//             AND estimateDetail.estimate_master_id = :estimate_master_id) 
+//             AND estimateDetail.estimate_master_id = :estimate_master_id)
 //           )
 //           OR
 //           (
@@ -505,13 +505,13 @@
 //         baseQueryBuilder.andWhere(
 //           `
 //           (
-//             estimateDetail.franchise_admin_id IS NULL 
-//             AND estimateDetail.vendor_id = :vendor_id 
+//             estimateDetail.franchise_admin_id IS NULL
+//             AND estimateDetail.vendor_id = :vendor_id
 //             AND estimateDetail.is_send_to_owner = :isSendToOwner
 //             AND estimateDetail.estimate_master_id = :estimate_master_id
 //           )
 //           OR (
-//             estimateDetail.id IS NULL 
+//             estimateDetail.id IS NULL
 //             AND estimateDetail.estimate_master_id = :estimate_master_id
 //           )
 //           `,
@@ -705,8 +705,8 @@
 
 //     if (estimate_details || is_send_to_owner !== undefined) {
 //       queryBuilder.andWhere(
-//         `estimateDetail.is_grand_total = :isGrandTotal 
-//          AND estimateDetail.is_send_to_owner = :isSendToOwner 
+//         `estimateDetail.is_grand_total = :isGrandTotal
+//          AND estimateDetail.is_send_to_owner = :isSendToOwner
 //          AND estimateDetail.is_estimate_approved = :isEstimateApproved`,
 //         {
 //           isGrandTotal: true,
@@ -809,8 +809,8 @@
 
 //     if (estimate_details || is_send_to_owner !== undefined) {
 //       queryBuilder.andWhere(
-//         `estimateDetail.is_grand_total = :isGrandTotal 
-//          AND estimateDetail.is_send_to_owner = :isSendToOwner 
+//         `estimateDetail.is_grand_total = :isGrandTotal
+//          AND estimateDetail.is_send_to_owner = :isSendToOwner
 //          AND estimateDetail.is_estimate_approved = :isEstimateApproved`,
 //         {
 //           isGrandTotal: true,
@@ -1085,23 +1085,23 @@
 //         ED.IS_SEND_TO_OWNER ,
 //         ED.IS_ESTIMATE_APPROVED ,
 //         TO_CHAR(to_timestamp(EM.CREATED_AT), 'MM-DD-YYYY') AS CREATED_AT,
-//         CASE 
+//         CASE
 //           WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = TRUE AND ED.IS_QUOTE_REJECTED = FALSE THEN ${QuoteStatus.PendingOwnerApproval}
 //           WHEN ED.IS_ESTIMATE_APPROVED = TRUE AND ED.IS_SEND_TO_OWNER = TRUE AND ED.IS_QUOTE_REJECTED = FALSE THEN ${QuoteStatus.QuoteAccepted}
 //           WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = TRUE AND ED.IS_QUOTE_REJECTED = TRUE THEN ${QuoteStatus.QuoteRejected}
-//           ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = FALSE AND ED.IS_QUOTE_REJECTED = TRUE THEN ${QuoteStatus.QuoteRejected}` : ''} 
-//           ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = FALSE AND ED.IS_QUOTE_REJECTED = FALSE ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `` : `AND ED.FRANCHISE_ADMIN_ID IS NULL`} THEN ${QuoteStatus.QuoteReceived}` : ``} 
+//           ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = FALSE AND ED.IS_QUOTE_REJECTED = TRUE THEN ${QuoteStatus.QuoteRejected}` : ''}
+//           ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = FALSE AND ED.IS_QUOTE_REJECTED = FALSE ${[UserType.FranchiseAdmin, UserType.StandardAdmin].includes(user.user_type) ? `` : `AND ED.FRANCHISE_ADMIN_ID IS NULL`} THEN ${QuoteStatus.QuoteReceived}` : ``}
 //         END AS STATUS
 //       FROM
 //         ESTIMATE_DETAILS ED
-//       LEFT JOIN ESTIMATE_MASTERS EM 
+//       LEFT JOIN ESTIMATE_MASTERS EM
 //       ON
 //         EM.ID = ED.ESTIMATE_MASTER_ID
-//       LEFT JOIN USER_DESCRIPTIONS UD 
+//       LEFT JOIN USER_DESCRIPTIONS UD
 //       ON UD.ESTIMATE_MASTER_ID = ED.ESTIMATE_MASTER_ID
 //           AND UD.USER_ID = ED.VENDOR_ID
 //           AND UD.IS_ESTIMATE_REJECT_DESCRIPTION = FALSE
-//       LEFT JOIN USERS U 
+//       LEFT JOIN USERS U
 //       ON U.ID = ED.VENDOR_ID
 //       WHERE
 //         ED.ESTIMATE_MASTER_ID = ${estimateMasterId}
@@ -1131,19 +1131,19 @@
 //     user: JwtPayload,
 //   ): Promise<any> {
 //     return await this.repository.query(
-//       `SELECT 
+//       `SELECT
 //         COALESCE((
-//           SELECT 
-//             CASE 
+//           SELECT
+//             CASE
 //               WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = FALSE AND ED.IS_QUOTE_REJECTED = FALSE THEN '${EstimateVendorStatus.Quoted}'
 //               WHEN ED.IS_ESTIMATE_APPROVED = TRUE AND ED.IS_SEND_TO_OWNER = TRUE AND ED.IS_QUOTE_REJECTED = FALSE THEN '${EstimateVendorStatus.QuoteAccepted}'
 //               WHEN ED.IS_ESTIMATE_APPROVED = FALSE AND ED.IS_SEND_TO_OWNER = TRUE AND ED.IS_QUOTE_REJECTED = TRUE THEN '${EstimateVendorStatus.Reject}'
 //               ELSE '3'
 //             END AS STATUS
 //           FROM ESTIMATE_DETAILS ED
-//           LEFT JOIN ESTIMATE_MASTERS EM 
+//           LEFT JOIN ESTIMATE_MASTERS EM
 //             ON EM.ID = ED.ESTIMATE_MASTER_ID
-//           LEFT JOIN USER_DESCRIPTIONS UD 
+//           LEFT JOIN USER_DESCRIPTIONS UD
 //             ON UD.ESTIMATE_MASTER_ID = ED.ESTIMATE_MASTER_ID
 //             AND UD.USER_ID = ED.VENDOR_ID
 //             AND UD.IS_ESTIMATE_REJECT_DESCRIPTION = FALSE
@@ -1262,16 +1262,16 @@
 //         TO_CHAR(to_timestamp(EM.created_at), 'MM-DD-YYYY') AS created_at
 //       FROM
 //         ESTIMATE_DETAILS ED
-//       LEFT JOIN ESTIMATE_MASTERS EM 
+//       LEFT JOIN ESTIMATE_MASTERS EM
 //         ON
 //         EM.ID = ED.ESTIMATE_MASTER_ID
-//       LEFT JOIN PROPERTY_MASTERS PM 
+//       LEFT JOIN PROPERTY_MASTERS PM
 //         ON
 //         EM.PROPERTY_MASTER_ID = PM.ID
 //       LEFT JOIN SERVICE_TYPES ST
 //         ON
 //         EM.SERVICE_TYPE_ID = ST.ID
-//       LEFT JOIN USER_DESCRIPTIONS UD 
+//       LEFT JOIN USER_DESCRIPTIONS UD
 //         ON
 //         UD.ESTIMATE_MASTER_ID = ED.ESTIMATE_MASTER_ID
 //         AND UD.USER_ID = ED.VENDOR_ID
@@ -1330,20 +1330,20 @@
 //         WHEN NOT EXISTS (
 //             SELECT 1 FROM ESTIMATE_DETAILS ED
 //             WHERE ed.estimate_master_id = EM.ID
-//         ) THEN CASE 
-//                 WHEN EM.STATUS = '${EstimateStatus.EstimateRequestedByOwner}' 
-//                 THEN '${EstimateOwnerStatus.UnAssigned}' 
+//         ) THEN CASE
+//                 WHEN EM.STATUS = '${EstimateStatus.EstimateRequestedByOwner}'
+//                 THEN '${EstimateOwnerStatus.UnAssigned}'
 //                 ELSE '${EstimateOwnerStatus.AwaitingVendorQuote}'
 //                 END
 //         ELSE 'N/A'
 //         END AS QUOTE_STATUS
 //         FROM ESTIMATE_MASTERS EM
-//         LEFT JOIN PROPERTY_MASTERS PM 
+//         LEFT JOIN PROPERTY_MASTERS PM
 //             ON PM.ID = EM.PROPERTY_MASTER_ID
-//         LEFT JOIN SERVICE_TYPES ST 
+//         LEFT JOIN SERVICE_TYPES ST
 //             ON ST.ID = EM.SERVICE_TYPE_ID
 //         WHERE EM.FRANCHISE_ID = ${user.franchise_id}
-//         ${user.user_type === UserType.Owner ? `AND EM.OWNER_ID = ${user.id}` : ``} 
+//         ${user.user_type === UserType.Owner ? `AND EM.OWNER_ID = ${user.id}` : ``}
 //         ${queryParams?.service_type_id ? `AND EM.SERVICE_TYPE_ID = ${queryParams?.service_type_id}` : ''}
 //         ${queryParams?.property_master_id ? `AND EM.PROPERTY_MASTER_ID = ${queryParams?.property_master_id}` : ''}
 //         ${queryParams?.start_date && queryParams?.end_date ? `AND EM.START_DATE >= '${queryParams?.start_date}' AND EM.START_DATE <= '${queryParams?.end_date}'` : ''}

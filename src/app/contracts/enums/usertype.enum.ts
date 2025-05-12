@@ -1,4 +1,4 @@
 export enum UserType {
-    PATIENT = 1,
-    DOCTOR = 2
+  PATIENT = 1,
+  DOCTOR = 2,
 }

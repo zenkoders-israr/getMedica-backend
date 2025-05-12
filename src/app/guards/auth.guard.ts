@@ -43,7 +43,6 @@ export class AuthGuard implements CanActivate {
           `You do not have permission to access this resource.`,
         );
       }
-
     } catch (error) {
       if (error instanceof ForbiddenException) throw error;
       throw new UnauthorizedException('Session expired, please login again');
@@ -67,7 +66,6 @@ export function AuthGuardFactory(roles: UserType[]): Type<CanActivate> {
     ) {
       // const userRepository = new UserRepository(dataSource);
       super(jwtService, configService, roles);
-
     }
   }
 

@@ -17,9 +17,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: RegisterUserDto, userType: UserType): Promise<boolean> {
-
-    if(userType === UserType.DOCTOR && !payload.specialty) {
+  async register(
+    payload: RegisterUserDto,
+    userType: UserType,
+  ): Promise<boolean> {
+    if (userType === UserType.DOCTOR && !payload.specialty) {
       throw new BadRequestException(AuthMessages.SPECIALTY_REQUIRED);
     }
 
@@ -30,7 +32,10 @@ export class AuthService {
     if (user) throw new BadRequestException(AuthMessages.USER_ALREADY_EXISTS);
 
     payload.password = await hashPassword(payload.password);
-    const newUser: UserModel = await this.userRepository.create({...payload, user_type: userType});
+    const newUser: UserModel = await this.userRepository.create({
+      ...payload,
+      user_type: userType,
+    });
 
     await this.userRepository.save(newUser);
     return true;
