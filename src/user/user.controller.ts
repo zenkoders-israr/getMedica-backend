@@ -15,7 +15,7 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(AuthGuardFactory([UserType.PATIENT]))
-  @Get('get-doctors')
+  @Get('user/get-doctors')
   async getDoctors(@Query() query: DoctorSearchDto, @Res() res: Response) {
     const doctors = await this.userService.getDoctors(query);
     return this.OKResponse(res, doctors);
