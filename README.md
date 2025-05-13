@@ -18,5 +18,5 @@ Run Following commands to run the project :
 
 Migrations :
 
--   Create Migration : npm run migration:create name=migrationName
+-   Create Migration : npx typeorm migration:create ./src/app/migrations/migrationName
 -   Run Migration : npm run migration:run
