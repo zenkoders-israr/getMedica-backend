@@ -63,6 +63,9 @@ export class UserModel extends PostgresBaseModel {
   @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.user)
   slots: SlotsModel[];
 
-  @OneToMany(() => BookingSlotsModel, (bookingSlotsModel) => bookingSlotsModel.patient)
+  @OneToMany(
+    () => BookingSlotsModel,
+    (bookingSlotsModel) => bookingSlotsModel.patient,
+  )
   patientSlots: BookingSlotsModel[];
 }

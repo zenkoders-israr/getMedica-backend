@@ -180,7 +180,10 @@ export class SchedulerService {
       throw new BadRequestException(SchedulerMessages.DOCTOR_NOT_FOUND);
     }
 
-    const scheduler = await this.schedulerRepository.getScheduler(userId, user.user_type);
+    const scheduler = await this.schedulerRepository.getScheduler(
+      userId,
+      user.user_type,
+    );
 
     return {
       doctor,

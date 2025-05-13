@@ -35,6 +35,9 @@ export class SchedulerModel extends PostgresBaseModel {
   @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.schedule)
   slots: SlotsModel[];
 
-  @OneToMany(() => BookingSlotsModel, (bookingSlotsModel) => bookingSlotsModel.schedule)
+  @OneToMany(
+    () => BookingSlotsModel,
+    (bookingSlotsModel) => bookingSlotsModel.schedule,
+  )
   bookingSlots: BookingSlotsModel[];
 }

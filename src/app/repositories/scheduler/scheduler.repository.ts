@@ -21,7 +21,11 @@ export class SchedulerRepository extends PostgresRepository<SchedulerModel> {
     ];
 
     if (user_type == UserType.PATIENT) {
-      select.push('bookingSlots.id', 'bookingSlots.time', 'bookingSlots.is_booked');
+      select.push(
+        'bookingSlots.id',
+        'bookingSlots.time',
+        'bookingSlots.is_booked',
+      );
     }
 
     const query = this.repository

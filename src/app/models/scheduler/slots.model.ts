@@ -40,12 +40,13 @@ export class SlotsModel extends PostgresBaseModel {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserModel;
 
-
   @ManyToOne(() => SchedulerModel, (schedulerModel) => schedulerModel.slots)
   @JoinColumn({ name: 'schedule_id', referencedColumnName: 'id' })
   schedule: SchedulerModel;
 
-
-  @OneToMany(() => BookingSlotsModel, (bookingSlotsModel) => bookingSlotsModel.slot)
+  @OneToMany(
+    () => BookingSlotsModel,
+    (bookingSlotsModel) => bookingSlotsModel.slot,
+  )
   bookingSlots: BookingSlotsModel[];
 }

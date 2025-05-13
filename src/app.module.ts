@@ -37,7 +37,7 @@ import { BookingModule } from './booking/booking.module';
     AuthModule,
     SchedulerModule,
     UserModule,
-    BookingModule
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService, BunyanLogger, EncryptionHelper],
