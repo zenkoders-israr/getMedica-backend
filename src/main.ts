@@ -17,6 +17,7 @@ async function bootstrap() {
   const corsOptions = {
     origin: [
       'http://localhost:5173', // Todo: Replace with frontend url
+      'http://localhost:4173', // Todo: Replace with frontend url
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
