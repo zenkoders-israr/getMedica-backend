@@ -6,6 +6,7 @@ import { UserTokenModel } from './userToken.model';
 import { Specialty } from '../../contracts/enums/specialty.enum';
 import { SchedulerModel } from '../scheduler/scheduler.model';
 import { SlotsModel } from '../scheduler/slots.model';
+import { BookingSlotsModel } from '../booking/bookingSlots.model';
 @Entity('users')
 export class UserModel extends PostgresBaseModel {
   @Column({
@@ -62,6 +63,6 @@ export class UserModel extends PostgresBaseModel {
   @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.user)
   slots: SlotsModel[];
 
-  @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.patient)
-  patientSlots: SlotsModel[];
+  @OneToMany(() => BookingSlotsModel, (bookingSlotsModel) => bookingSlotsModel.patient)
+  patientSlots: BookingSlotsModel[];
 }

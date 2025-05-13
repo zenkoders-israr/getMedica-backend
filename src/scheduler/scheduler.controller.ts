@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Put,
   Res,
   UseGuards,
@@ -14,7 +13,7 @@ import { BaseController } from '../app/commons/base.controller';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuardFactory } from '@/app/guards/auth.guard';
 import { UserType } from '@/app/contracts/enums/usertype.enum';
-import { BookSlotDto, CreateSchedulerDto } from './scheduler.dto';
+import { CreateSchedulerDto } from './scheduler.dto';
 import { JwtPayload } from '@/app/contracts/types/jwtPayload.type';
 import { User } from '@/app/decorators/user.decorator';
 @ApiTags('Scheduler')
@@ -48,18 +47,14 @@ export class SchedulerController extends BaseController {
     type: Number,
   })
   async getScheduler(
-    @Param('doctor_id') doctor_id: number | undefined,
+    @Param('doctor_id') doctor_id: string | undefined,
     @User() user: JwtPayload,
     @Res() res: Response,
   ) {
-    const scheduler = await this.schedulerService.getScheduler(user, doctor_id);
-    return this.OKResponse(res, scheduler);
-  }
-
-  @UseGuards(AuthGuardFactory([UserType.PATIENT]))
-  @Patch('scheduler/book-slot')
-  async bookSlot(@Body() payload: BookSlotDto, @Res() res: Response) {
-    const scheduler = await this.schedulerService.bookSlot(payload);
+    const scheduler = await this.schedulerService.getScheduler(
+      user,
+      Number(doctor_id),
+    );
     return this.OKResponse(res, scheduler);
   }
 }

@@ -3,7 +3,7 @@ import { PostgresBaseModel } from '../postgresBase.model';
 import { ScheduleDay } from '@/app/contracts/enums/scheduleDay.enum';
 import { UserModel } from '../user/user.model';
 import { SlotsModel } from './slots.model';
-
+import { BookingSlotsModel } from '../booking/bookingSlots.model';
 @Entity('scheduler')
 export class SchedulerModel extends PostgresBaseModel {
   @Column({
@@ -34,4 +34,7 @@ export class SchedulerModel extends PostgresBaseModel {
 
   @OneToMany(() => SlotsModel, (slotsModel) => slotsModel.schedule)
   slots: SlotsModel[];
+
+  @OneToMany(() => BookingSlotsModel, (bookingSlotsModel) => bookingSlotsModel.schedule)
+  bookingSlots: BookingSlotsModel[];
 }

@@ -13,6 +13,7 @@ import { SlotsRepository } from '@/app/repositories/scheduler/slots.repository';
 import { SlotsModel } from '@/app/models/scheduler/slots.model';
 import { BunyanLogger } from '@/app/commons/logger.service';
 import { UserRepository } from '@/app/repositories/user/user.repository';
+import { BookingSlotRepository } from '@/app/repositories/bookingSlot/bookingSlot.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([SchedulerModel, SlotsModel]),
@@ -38,6 +39,7 @@ import { UserRepository } from '@/app/repositories/user/user.repository';
     UserRepository,
     EncryptionHelper,
     BunyanLogger,
+    BookingSlotRepository,
   ],
   exports: [SchedulerService],
 })
