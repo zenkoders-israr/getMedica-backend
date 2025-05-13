@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { PostgresBaseModel } from '../postgresBase.model';
 import { UserModel } from './user.model';
-import { TokenType } from '@/app/contracts/enums/TokenType.enum';
+import { TokenType } from '../../contracts/enums/TokenType.enum';
 
 @Entity('user_tokens')
 export class UserTokenModel extends PostgresBaseModel {
