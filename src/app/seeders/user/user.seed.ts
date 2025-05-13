@@ -12,8 +12,12 @@ export default class UserSeeder implements Seeder {
       userRepo.findOne({ where: { email: patientMockData.email } }),
     ]);
 
-    doctorMockData.password = await hashPassword(doctorMockData.password);
-    patientMockData.password = await hashPassword(patientMockData.password);
+    const [docPassword, patientPassword] = await Promise.all([
+      hashPassword(doctorMockData.password),
+      hashPassword(patientMockData.password),
+    ]);
+    doctorMockData.password = docPassword;
+    patientMockData.password = patientPassword;
 
     if (!doctor) {
       await userRepo.save(doctorMockData);
